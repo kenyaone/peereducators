@@ -1,0 +1,25 @@
+# Runtime database — rebuilt by setup/seed_peer_educator.php.
+# Kept out of git deliberately: it is a binary that changes on every page
+# view, and committing it means every deploy risks overwriting live
+# trainee records. ARISE tracks its own arise.db; this app does not.
+data/peereducator.db
+data/peereducator.db-wal
+data/peereducator.db-shm
+data/*.db-journal
+
+# Per-box runtime state — never shared between installations
+data/backups/
+data/datapost/
+data/content/
+*.log
+
+# Large media: too big for git, uploaded per box through the admin panel.
+# Lesson HTML in data/uploads/interactive/ IS tracked — it is the content.
+data/uploads/**/*.mp4
+data/uploads/**/*.webm
+data/uploads/**/*.ogg
+data/uploads/**/*.avi
+data/uploads/**/*.mov
+
+# Secrets
+.env

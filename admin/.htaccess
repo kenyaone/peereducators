@@ -1,0 +1,20 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /peereducator/admin/
+
+# Don't rewrite existing files
+RewriteCond %{REQUEST_FILENAME} !-f
+# Don't rewrite existing directories
+RewriteCond %{REQUEST_FILENAME} !-d
+# Don't rewrite the index.php file itself
+RewriteCond %{REQUEST_URI} !^/peereducator/admin/index\.php
+
+# Rewrite everything else to index.php with the path as p parameter
+RewriteRule ^(.*)$ index.php?p=$1 [QSA,L]
+</IfModule>
+
+# Security headers
+<FilesMatch "\.(db|sqlite|json|txt)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>

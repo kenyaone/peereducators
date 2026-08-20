@@ -1,0 +1,49 @@
+<div class="nav-bar"><div class="nav-inner"><button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button><div class="dots" id="dotsWrap"></div><button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button></div></div><script>
+var lang = window.PEER_LANG || localStorage.getItem('peer_lang') || 'en';
+function setLang(l){lang=l;['en','sw','sh'].forEach(function(c){document.querySelectorAll('.'+c).forEach(function(el){el.style.display=l===c?'block':'none';});});['enBtn','swBtn','shBtn'].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.toggle('active',id===l+'Btn');});localStorage.setItem('peer_lang',l);try{fetch('/peereducator/?p=api_lesson&action=set_language',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lang:l})}).catch(function(){});}catch(e){}}
+setLang(lang);
+function setSize(s){var map={sm:'13px',md:'15px',lg:'17px'};document.body.style.fontSize=map[s]||'15px';['sm','md','lg'].forEach(function(k){var b=document.getElementById('sz-'+k);if(b)b.classList.toggle('active',k===s);});localStorage.setItem('peer_textsize',s);}
+setSize(localStorage.getItem('peer_textsize')||'md');
+var cur=0,slides=[];
+function init(){slides=document.querySelectorAll('.slide');var dw=document.getElementById('dotsWrap');slides.forEach(function(_,i){var d=document.createElement('span');d.className='dot'+(i===0?' active':'');d.onclick=function(){go(i);};dw.appendChild(d);});upd();var vid=document.getElementById('lessonVideo');var ph=document.getElementById('videoPlaceholder');var vurl=window.PEER_VIDEO_URL||'';if(vurl&&vid){var s=document.createElement('source');s.src=vurl;s.type='video/mp4';vid.appendChild(s);vid.load();vid.addEventListener('loadeddata',function(){if(ph)ph.style.display='none';vid.style.display='block';});vid.style.display='none';}else{if(ph)ph.style.display='flex';if(vid)vid.style.display='none';}var slug=window.PEER_LESSON_SLUG||document.body.dataset.lessonSlug;var rs=window.PEER_RESUME_SLIDE||(slug?parseInt(localStorage.getItem('peer_slide_'+slug)||'0'):0);if(rs>0&&rs<slides.length)setTimeout(function(){go(rs);},120);}
+function navigate(dir){go(cur+dir);}
+function go(n){if(n<0||n>=slides.length)return;slides[cur].classList.remove('active');var dots=document.querySelectorAll('.dot');dots[cur].classList.remove('active');dots[cur].classList.add('visited');cur=n;slides[cur].classList.add('active');dots[cur].classList.remove('visited');dots[cur].classList.add('active');upd();window.scrollTo(0,0);var lid=document.body.dataset.lessonId;var slug2=window.PEER_LESSON_SLUG||document.body.dataset.lessonSlug;if(slug2)localStorage.setItem('peer_slide_'+slug2,n);if(lid&&lid!=='0')fetch('/peereducator/?p=api_lesson&action=save_progress',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lesson_id:parseInt(lid),slide:n})}).catch(function(){});}
+function upd(){document.getElementById('slideCounter').textContent=(cur+1)+' / '+slides.length;document.getElementById('prevBtn').disabled=cur===0;document.getElementById('nextBtn').disabled=cur===slides.length-1;}
+function scPick(btn,scId,type,resId){document.querySelectorAll('#'+scId+' .choice').forEach(function(b){b.disabled=true;});btn.classList.add('chosen-'+type);var res=document.getElementById(resId);if(res){res.className='s-result '+type;res.style.display='block';}}
+function scRetry(id){var w=document.querySelector('#'+id+' .s-result:not([style*="none"])');if(w)w.style.display='none';document.querySelectorAll('#'+id+' .choice').forEach(function(b){b.disabled=false;b.className='choice';});}
+var mcqAnswers={'mcq1':'C','mcq2':'B','mcq3':'A,B,D,E','mcq4':'A','mcq5':'B','mcq6':'A,B,D,E','mcq7':'A','mcq8':'B','mcq9':'A,C,D,E','mcq10':'B'};
+var mcqExplain={'mcq1':'','mcq2':'','mcq3':'','mcq4':'','mcq5':'','mcq6':'','mcq7':'','mcq8':'','mcq9':'','mcq10':''};
+var mcqTypes={'mcq1':'mcq','mcq2':'mcq','mcq3':'msq','mcq4':'mcq','mcq5':'mcq','mcq6':'msq','mcq7':'mcq','mcq8':'mcq','mcq9':'msq','mcq10':'mcq'};
+function selectOpt(el,grp,letter){document.querySelectorAll('#'+grp+' .opt').forEach(function(o){o.classList.remove('selected');});el.classList.add('selected');}
+function toggleOpt(el,grp){el.classList.toggle('selected');}
+function submitMCQ(){
+  var score=0,total=Object.keys(mcqAnswers).length;
+  Object.keys(mcqAnswers).forEach(function(grp){
+    var correct=mcqAnswers[grp],qtype=mcqTypes[grp]||'mcq';
+    var opts=document.querySelectorAll('#'+grp+' .opt');
+    var chosen=[];opts.forEach(function(o){if(o.classList.contains('selected'))chosen.push(o.getAttribute('data-opt'));});
+    opts.forEach(function(o){o.onclick=null;});
+    var ok=false;
+    if(qtype==='msq'){
+      var cArr=correct.split(',').map(function(x){return x.trim();}).sort();
+      var chArr=chosen.slice().sort();
+      ok=JSON.stringify(cArr)===JSON.stringify(chArr);
+      opts.forEach(function(o){var l=o.getAttribute('data-opt');if(cArr.indexOf(l)>=0)o.classList.add('correct');else if(chosen.indexOf(l)>=0)o.classList.add('wrong');});
+    }else{
+      ok=chosen.length>0&&chosen[0]===correct;
+      opts.forEach(function(o){var l=o.getAttribute('data-opt');if(l===correct)o.classList.add('correct');else if(chosen.indexOf(l)>=0)o.classList.add('wrong');});
+    }
+    if(ok)score++;
+    var fb=document.getElementById('fb_'+grp);
+    if(fb){fb.style.display='block';if(ok){fb.className='mcq-fb ok';fb.innerHTML='<strong>✓ Correct!</strong> '+mcqExplain[grp];}else{fb.className='mcq-fb no';fb.innerHTML=(qtype==='msq'?'<strong>✗ Incorrect.</strong> You selected: <strong>'+(chosen.length?chosen.join(', '):'—')+'</strong> — Correct: <strong>'+correct+'</strong>. ':'<strong>✗ Incorrect.</strong> Correct answer: <strong>'+correct+'</strong>. ')+mcqExplain[grp];}}
+  });
+  var pct=Math.round(score/total*100);
+  var sb=document.getElementById('score-box');
+  if(sb){sb.style.display='block';document.getElementById('score-title').textContent=score+' / '+total+' ('+pct+'%)';document.getElementById('score-detail').textContent=pct>=80?'⭐ Excellent! You understand this topic very well.':pct>=60?'👍 Good effort! Review the highlighted incorrect answers.':'📖 Keep studying! Revisit the lesson slides and try again.';sb.scrollIntoView({behavior:'smooth'});}
+  if(window.PEER_LESSON_ID){fetch('/peereducator/?p=api_lesson&action=save_quiz_score',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lesson_id:window.PEER_LESSON_ID,score:score,total:total,percent:pct})}).catch(function(){});}
+}
+window.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
+</body></html>

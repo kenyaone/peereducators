@@ -1,0 +1,13 @@
+---
+deployment:
+  tasks:
+    # Serves at https://<domain>/peereducator/ — matches the /peereducator/
+    # prefix the app hardcodes and every .htaccess RewriteBase.
+    - export DEPLOYPATH=/home/cpmsfdav/public_html/peereducator/
+    - /bin/mkdir -p $DEPLOYPATH
+    # The live database is never overwritten by a deploy.
+    - /bin/rsync -av --exclude='.git' --exclude='data/peereducator.db' --exclude='data/backups' . $DEPLOYPATH
+    # First deploy only: build and seed the database if it does not exist.
+    # Existing installations are left untouched.
+    - /bin/test -f $DEPLOYPATH/data/peereducator.db || /usr/local/bin/php $DEPLOYPATH/setup/seed_peer_educator.php
+    - /bin/test -f $DEPLOYPATH/data/peereducator.db && /usr/local/bin/php $DEPLOYPATH/setup/register_lessons.php

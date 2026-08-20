@@ -1,0 +1,61 @@
+{
+  "name": "Peer Educator Health Education",
+  "short_name": "Peer Educator",
+  "description": "Offline-first health education for schools — MTTI Peer Educator programme.",
+  "start_url": "/peereducator/?source=pwa",
+  "scope": "/peereducator/",
+  "id": "/peereducator/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#3D6318",
+  "theme_color": "#3D6318",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "health"],
+  "icons": [
+    {
+      "src": "/peereducator/css/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/peereducator/css/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/peereducator/css/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/peereducator/css/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Modules",
+      "short_name": "Modules",
+      "url": "/peereducator/?p=modules&source=pwa",
+      "icons": [{ "src": "/peereducator/css/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Resources",
+      "short_name": "Resources",
+      "url": "/peereducator/?p=resources&source=pwa",
+      "icons": [{ "src": "/peereducator/css/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Forum",
+      "short_name": "Forum",
+      "url": "/peereducator/?p=forum&source=pwa",
+      "icons": [{ "src": "/peereducator/css/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

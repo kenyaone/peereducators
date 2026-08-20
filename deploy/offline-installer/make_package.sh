@@ -1,0 +1,107 @@
+#!/bin/bash
+# Run this on the SOURCE machine (with internet) to create a fully offline Peer Educator package.
+# Usage: sudo bash make_package.sh
+
+set -e
+
+# Output path defaults to the invoking user's home. Override with
+# PEER_PACKAGE_DIR=/some/path sudo bash make_package.sh
+PACKAGE_DIR="${PEER_PACKAGE_DIR:-/home/${SUDO_USER:-$(id -un)}/peer_deploy}"
+DEBS_DIR="$PACKAGE_DIR/debs"
+OUTPUT="$PACKAGE_DIR/peer_package.tar.gz"
+mkdir -p "$PACKAGE_DIR"
+
+echo "=== Peer Educator Packager (offline-capable) ==="
+echo ""
+
+# ── 1. Download all required .deb packages with dependencies ─────────────────
+echo "[1/4] Downloading .deb packages (requires internet on THIS machine) ..."
+mkdir -p "$DEBS_DIR"
+
+# Refresh apt cache silently
+apt-get update -qq
+
+# Download packages + all dependencies into debs/
+# --download-only fetches to /var/cache/apt/archives/ without installing
+apt-get install -y --download-only \
+    apache2 \
+    php \
+    php-sqlite3 \
+    php-curl \
+    libapache2-mod-php \
+    php-mbstring \
+    php-xml \
+    php-zip \
+    curl \
+    openssl \
+    > /dev/null 2>&1
+
+# Copy downloaded .deb files to our debs/ folder
+cp /var/cache/apt/archives/*.deb "$DEBS_DIR/" 2>/dev/null || true
+DEB_COUNT=$(ls "$DEBS_DIR"/*.deb 2>/dev/null | wc -l)
+echo "    Downloaded $DEB_COUNT .deb packages."
+
+# ── 2. Archive the entire Peer Educator app (files + SQLite DB) ──────────────────────
+# Pause the arise user's cron so cloud_push.php doesn't touch the SQLite DB
+# while tar is reading it. Without this, tar exits with code 1 ("file changed
+# as we read it") and set -e kills the whole packager mid-run. EXIT trap
+# restores the crontab whether we succeed or fail.
+CRON_BACKUP=$(mktemp)
+if crontab -u arise -l > "$CRON_BACKUP" 2>/dev/null; then
+    crontab -u arise -r 2>/dev/null
+    CRON_PAUSED=1
+    trap '[ -s "$CRON_BACKUP" ] && crontab -u arise "$CRON_BACKUP"; rm -f "$CRON_BACKUP"' EXIT
+    sleep 3   # let any in-flight sync finish
+fi
+
+echo "[2/4] Archiving /var/www/peereducator/ ..."
+tar --exclude='/var/www/peereducator/data/uploads/videos/*.mp4' \
+    --warning=no-file-changed \
+    -czf "$PACKAGE_DIR/peer_files.tar.gz" \
+    -C /var/www arise/
+# To include videos, remove the --exclude line above.
+
+# ── 3. Copy Apache config ─────────────────────────────────────────────────────
+echo "[3/4] Copying Apache config ..."
+cp /etc/apache2/sites-available/mtti-lms.conf "$PACKAGE_DIR/mtti-lms.conf"
+
+# ── 4. Bundle everything into one deployable archive ─────────────────────────
+echo "[4/4] Creating final package ..."
+
+# Bring install.sh (and optional first-boot-fix.sh) in from the directory
+# this script lives in, so make_package.sh works regardless of where
+# PACKAGE_DIR points.
+SRC_DIR="$(cd "$(dirname "$0")" && pwd)"
+cp "$SRC_DIR/install.sh" "$PACKAGE_DIR/install.sh"
+EXTRA_FILES=""
+if [ -f "$SRC_DIR/first-boot-fix.sh" ]; then
+    cp "$SRC_DIR/first-boot-fix.sh" "$PACKAGE_DIR/first-boot-fix.sh"
+    EXTRA_FILES="first-boot-fix.sh"
+fi
+if [ -f "$SRC_DIR/clone-fresh-start.sh" ]; then
+    cp "$SRC_DIR/clone-fresh-start.sh" "$PACKAGE_DIR/clone-fresh-start.sh"
+    EXTRA_FILES="$EXTRA_FILES clone-fresh-start.sh"
+fi
+
+tar -czf "$OUTPUT" \
+    -C "$PACKAGE_DIR" \
+    debs/ \
+    peer_files.tar.gz \
+    mtti-lms.conf \
+    install.sh \
+    $EXTRA_FILES
+
+# Cleanup intermediates
+rm -rf "$DEBS_DIR"
+rm -f  "$PACKAGE_DIR/peer_files.tar.gz"
+
+echo ""
+echo "=== Done ==="
+SIZE=$(du -sh "$OUTPUT" | cut -f1)
+echo "Package created: $OUTPUT  ($SIZE)"
+echo ""
+echo "Copy this file to any target machine (no internet needed), then run:"
+echo "  tar -xzf peer_package.tar.gz && sudo bash install.sh"
+echo ""
+echo "NOTE: The .deb packages are for $(dpkg --print-architecture) architecture."
+echo "      Target machines must be the same architecture (e.g. all amd64 or all arm64)."
