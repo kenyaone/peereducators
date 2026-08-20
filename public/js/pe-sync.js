@@ -212,7 +212,9 @@ async function sendToCloud(db, record) {
   await putRecord(db, 'pending_syncs', record);
 
   const payload = {
-    api_key: 'PEER_CLOUD_SYNC_2026_KEY',
+    // Never hardcode a key here: this file is served to every visitor.
+    // The server injects one at runtime if cloud sync is configured.
+    api_key: (window.PEER_CLOUD_API_KEY || ''),
     device_id: record.device_id,
     synced_at: record.queued_at,
     schools: record.schools

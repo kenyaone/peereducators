@@ -348,7 +348,7 @@ if ($action === 'cloud_sync') {
     // Non-fatal — metrics sync still runs even if this step fails.
     $defs = pushClusterDefinitions();
 
-    $payload = json_encode(['api_key'=>'PEER_CLOUD_SYNC_2026_KEY','device_id'=>$cfg['school_id']??'peereducator-unknown','synced_at'=>date('Y-m-d H:i:s'),'schools'=>$schoolRows,'modules'=>moduleBreakdown()]);
+    $payload = json_encode(['api_key'=>(defined('CLOUD_API_KEY') ? CLOUD_API_KEY : ''),'device_id'=>$cfg['school_id']??'peereducator-unknown','synced_at'=>date('Y-m-d H:i:s'),'schools'=>$schoolRows,'modules'=>moduleBreakdown()]);
     $syncUrl  = $cfg['cloud_sync_url'] ?? 'https://ariseci.org/peereducator-sync.php';
 
     $ch = curl_init($syncUrl);

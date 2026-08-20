@@ -39,6 +39,8 @@ define('DEFAULT_SCHOOL_ID', 'PE-SETUP-000');
 // Do NOT point this at ARISE's receiver — the payloads share a schema shape and
 // would overwrite ARISE cluster/school rows. Set both to enable.
 define('CLOUD_SYNC_SECRET', '');
+// Set per-installation outside version control. Empty disables cloud posting.
+define('CLOUD_API_KEY',     '');
 define('CLOUD_SYNC_URL',    '');
 
 // Kenya county/cluster centroid coordinates used as a fast offline geocoder.

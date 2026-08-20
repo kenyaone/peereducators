@@ -2,7 +2,8 @@
 declare(strict_types=1);
 header('Content-Type: application/json');
 
-const SYNC_SECRET = 'peer_sync_k3nya_2026';
+// The shared secret lives in CONFIG_PATH, never in this repository.
+// This file is published publicly; a literal here is a literal on the internet.
 const CONFIG_PATH = '/home/cpmsfdav/cloud_db_config.php';
 
 function fail(string $msg, int $code = 400): void {
@@ -11,7 +12,15 @@ function fail(string $msg, int $code = 400): void {
     exit;
 }
 
-if (($_POST['secret'] ?? '') !== SYNC_SECRET) fail('bad secret', 403);
+// Load config before authenticating — the secret comes from it.
+if (!is_file(CONFIG_PATH)) fail('config missing: ' . CONFIG_PATH, 500);
+$cfg = require CONFIG_PATH;
+
+// Fail closed: an unset or empty sync_secret denies every request.
+$syncSecret = (string)($cfg['sync_secret'] ?? '');
+if ($syncSecret === '' || !hash_equals($syncSecret, (string)($_POST['secret'] ?? ''))) {
+    fail('bad secret', 403);
+}
 
 $payload = json_decode($_POST['payload'] ?? '', true);
 if (!is_array($payload)) fail('bad payload');
@@ -22,9 +31,6 @@ if ($deviceId === '') fail('missing device_id');
 $clusters = is_array($payload['clusters'] ?? null) ? $payload['clusters'] : null; // null = clone (don't touch clusters)
 $schools  = is_array($payload['schools']  ?? null) ? $payload['schools']  : [];
 $students = is_array($payload['students'] ?? null) ? $payload['students'] : [];
-
-if (!is_file(CONFIG_PATH)) fail('config missing: ' . CONFIG_PATH, 500);
-$cfg = require CONFIG_PATH;
 
 mysqli_report(MYSQLI_REPORT_OFF);
 $mysqli = @new mysqli($cfg['host'] ?? 'localhost', $cfg['user'] ?? '', $cfg['pass'] ?? '', $cfg['db'] ?? '');
