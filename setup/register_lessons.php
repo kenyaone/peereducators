@@ -40,8 +40,14 @@ $LESSONS = [
                                     => ['M10', 'Understanding Drug and Substance Abuse',     1, 45, 'group_discussion'],
     'm10b-recognising-and-responding.html'
                                     => ['M10', 'Recognising Substance Abuse and Responding', 2, 45, 'role_play'],
+    'm11a-sex-and-consequences.html'
+                                    => ['M11', 'Sex, Consequences and Prevention',       1, 45, 'group_discussion'],
+    'm11b-contraception-and-pregnancy.html'
+                                    => ['M11', 'Contraception and Teenage Pregnancy',    2, 45, 'group_discussion'],
     'm12a-understanding-gbv.html'   => ['M12', 'Understanding Gender Based Violence',      1, 45, 'group_discussion'],
     'm12b-responding-to-gbv.html'   => ['M12', 'Responding to GBV and Harmful Practices',  2, 60, 'role_play'],
+    'm13a-stis-hiv-early-adolescents.html'
+                                    => ['M13A','STIs and HIV — Ages 10 to 14',          1, 60, 'group_discussion'],
     'm13b1-stis-and-condoms.html'   => ['M13B','STIs and Condoms',                        1, 45, 'demonstration'],
     'm13b2-hiv-prep-pep-ahd.html'   => ['M13B','HIV, PrEP, PEP and Advanced HIV Disease', 2, 60, 'role_play'],
     'm15-accidents-and-emergencies.html'
