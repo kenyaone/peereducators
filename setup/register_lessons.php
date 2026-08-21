@@ -24,6 +24,9 @@ $LESSONS = [
                                     => ['M8',  'Diabetes, Hypertension and Sickle Cell', 1, 60, 'group_discussion'],
     'm08b-breast-and-cervical-cancer.html'
                                     => ['M8',  'Breast and Cervical Cancer',             2, 45, 'demonstration'],
+    'm02-adolescent-rights.html'    => ['M2',  'Adolescent Rights',                      1, 60, 'group_discussion'],
+    'm03-growth-and-development.html'
+                                    => ['M3',  'Growth and Development',                 1, 60, 'group_discussion'],
     'm04-personal-hygiene.html'     => ['M4',  'Personal Hygiene and Sanitation',        1, 45, 'demonstration'],
     'm05a-skills-for-yourself.html' => ['M5',  'Life Skills — Skills for Yourself',   1, 45, 'group_discussion'],
     'm05b-skills-with-others.html'  => ['M5',  'Life Skills — Others and Decisions',  2, 45, 'role_play'],
@@ -43,6 +46,8 @@ $LESSONS = [
     'm13b2-hiv-prep-pep-ahd.html'   => ['M13B','HIV, PrEP, PEP and Advanced HIV Disease', 2, 60, 'role_play'],
     'm15-accidents-and-emergencies.html'
                                     => ['M15', 'Accidents, Injuries and Emergencies',    1, 60, 'role_play'],
+    'm18-monitoring-and-evaluation.html'
+                                    => ['M18', 'Monitoring and Evaluation',              1, 60, 'group_discussion'],
     'm16-referral-and-linkage.html' => ['M16', 'Referral and Linkage', 1, 60, 'role_play'],
 ];
 
