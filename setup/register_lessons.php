@@ -24,6 +24,8 @@ $LESSONS = [
                                     => ['M8',  'Diabetes, Hypertension and Sickle Cell', 1, 60, 'group_discussion'],
     'm08b-breast-and-cervical-cancer.html'
                                     => ['M8',  'Breast and Cervical Cancer',             2, 45, 'demonstration'],
+    'm12a-understanding-gbv.html'   => ['M12', 'Understanding Gender Based Violence',      1, 45, 'group_discussion'],
+    'm12b-responding-to-gbv.html'   => ['M12', 'Responding to GBV and Harmful Practices',  2, 60, 'role_play'],
     'm13b1-stis-and-condoms.html'   => ['M13B','STIs and Condoms',                        1, 45, 'demonstration'],
     'm13b2-hiv-prep-pep-ahd.html'   => ['M13B','HIV, PrEP, PEP and Advanced HIV Disease', 2, 60, 'role_play'],
     'm16-referral-and-linkage.html' => ['M16', 'Referral and Linkage', 1, 60, 'role_play'],
