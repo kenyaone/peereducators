@@ -50,8 +50,13 @@ $LESSONS = [
                                     => ['M13A','STIs and HIV — Ages 10 to 14',          1, 60, 'group_discussion'],
     'm13b1-stis-and-condoms.html'   => ['M13B','STIs and Condoms',                        1, 45, 'demonstration'],
     'm13b2-hiv-prep-pep-ahd.html'   => ['M13B','HIV, PrEP, PEP and Advanced HIV Disease', 2, 60, 'role_play'],
+    'm14a-tb-what-it-is.html'       => ['M14', 'Tuberculosis — What It Is and How to Spot It', 1, 45, 'group_discussion'],
+    'm14b-tb-treatment-and-prevention.html'
+                                    => ['M14', 'Tuberculosis — Treatment and Prevention',     2, 45, 'demonstration'],
     'm15-accidents-and-emergencies.html'
                                     => ['M15', 'Accidents, Injuries and Emergencies',    1, 60, 'role_play'],
+    'm17a-advocacy-and-sbc.html'    => ['M17', 'Advocacy and Social Behaviour Change',       1, 45, 'group_discussion'],
+    'm17b-digital-safety.html'      => ['M17', 'Digital Platforms, Safety and Reporting',    2, 45, 'demonstration'],
     'm18-monitoring-and-evaluation.html'
                                     => ['M18', 'Monitoring and Evaluation',              1, 60, 'group_discussion'],
     'm16-referral-and-linkage.html' => ['M16', 'Referral and Linkage', 1, 60, 'role_play'],
