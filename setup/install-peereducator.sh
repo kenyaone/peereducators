@@ -146,6 +146,11 @@ else
     echo "      database exists — adding any missing modules"
     sudo -u www-data php "$APP_DIR/setup/seed_peer_educator.php" --force || true
 fi
+
+# Link the lesson HTML files to their modules. Without this the site installs
+# cleanly, reports 19 modules, and shows no lessons at all.
+echo -e "${GREEN}      linking lessons...${NC}"
+sudo -u www-data php "$APP_DIR/setup/register_lessons.php"
 chown www-data:www-data "$APP_DIR/data/peereducator.db"
 chmod 664 "$APP_DIR/data/peereducator.db"
 
