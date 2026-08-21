@@ -24,8 +24,11 @@ $LESSONS = [
                                     => ['M8',  'Diabetes, Hypertension and Sickle Cell', 1, 60, 'group_discussion'],
     'm08b-breast-and-cervical-cancer.html'
                                     => ['M8',  'Breast and Cervical Cancer',             2, 45, 'demonstration'],
+    'm04-personal-hygiene.html'     => ['M4',  'Personal Hygiene and Sanitation',        1, 45, 'demonstration'],
     'm05a-skills-for-yourself.html' => ['M5',  'Life Skills — Skills for Yourself',   1, 45, 'group_discussion'],
     'm05b-skills-with-others.html'  => ['M5',  'Life Skills — Others and Decisions',  2, 45, 'role_play'],
+    'm06-nutrition.html'            => ['M6',  'Nutrition',                              1, 60, 'group_discussion'],
+    'm07-physical-activity.html'    => ['M7',  'Physical Activity',                      1, 60, 'demonstration'],
     'm09a-mental-health-and-stress.html'
                                     => ['M9',  'Mental Health, Stress and Common Conditions',   1, 45, 'group_discussion'],
     'm09b-suicide-pressures-and-help.html'
@@ -38,6 +41,8 @@ $LESSONS = [
     'm12b-responding-to-gbv.html'   => ['M12', 'Responding to GBV and Harmful Practices',  2, 60, 'role_play'],
     'm13b1-stis-and-condoms.html'   => ['M13B','STIs and Condoms',                        1, 45, 'demonstration'],
     'm13b2-hiv-prep-pep-ahd.html'   => ['M13B','HIV, PrEP, PEP and Advanced HIV Disease', 2, 60, 'role_play'],
+    'm15-accidents-and-emergencies.html'
+                                    => ['M15', 'Accidents, Injuries and Emergencies',    1, 60, 'role_play'],
     'm16-referral-and-linkage.html' => ['M16', 'Referral and Linkage', 1, 60, 'role_play'],
 ];
 
