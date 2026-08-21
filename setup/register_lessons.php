@@ -24,6 +24,8 @@ $LESSONS = [
                                     => ['M8',  'Diabetes, Hypertension and Sickle Cell', 1, 60, 'group_discussion'],
     'm08b-breast-and-cervical-cancer.html'
                                     => ['M8',  'Breast and Cervical Cancer',             2, 45, 'demonstration'],
+    'm05a-skills-for-yourself.html' => ['M5',  'Life Skills — Skills for Yourself',   1, 45, 'group_discussion'],
+    'm05b-skills-with-others.html'  => ['M5',  'Life Skills — Others and Decisions',  2, 45, 'role_play'],
     'm09a-mental-health-and-stress.html'
                                     => ['M9',  'Mental Health, Stress and Common Conditions',   1, 45, 'group_discussion'],
     'm09b-suicide-pressures-and-help.html'
