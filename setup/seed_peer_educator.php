@@ -44,9 +44,13 @@ echo "Database: $dbPath" . ($fresh ? " (new)\n" : " (existing)\n");
 
 // ── 1. Base schema ─────────────────────────────────────────────────────
 $sql = file_get_contents($root . '/sql/schema.sql');
+// Strip comment LINES first. Splitting on ";" and then discarding any chunk
+// that begins with "--" silently swallows the statement following a comment
+// block — which is how the very first CREATE TABLE went missing.
+$sql = preg_replace('/^\s*--.*$/m', '', $sql);
 $db->exec('BEGIN');
 foreach (array_filter(array_map('trim', explode(";\n", $sql))) as $stmt) {
-    if ($stmt === '' || str_starts_with($stmt, '--')) continue;
+    if ($stmt === '') continue;
     try { $db->exec($stmt); }
     catch (Exception $e) { fwrite(STDERR, "  schema warn: " . $e->getMessage() . "\n"); }
 }

@@ -216,11 +216,13 @@ function db(): SQLite3 {
 
 function initDatabase(): void {
     $schema = file_get_contents(__DIR__ . '/../sql/schema.sql');
-    // Split by semicolons and execute each statement individually
+    // Strip comment lines before splitting. Discarding any chunk that starts
+    // with "--" would drop the statement that follows a comment block.
+    $schema = preg_replace('/^\s*--.*$/m', '', $schema);
     $statements = explode(';', $schema);
     foreach ($statements as $stmt) {
         $stmt = trim($stmt);
-        if (!empty($stmt) && !str_starts_with($stmt, '--')) {
+        if (!empty($stmt)) {
             try {
                 db()->exec($stmt);
             } catch (Exception $e) {
